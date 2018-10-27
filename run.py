@@ -6,11 +6,12 @@ URL = "https://asr.yandex.net/asr_xml?uuid=2ebb3f90fc3b454cbbcaa407f7b2b402&key=
 def stt(fname):
     with open(fname, 'rb') as f:
         data = f.read()
-    r = requests.post(URL, data=data, headers={'Content-Type': 'audio/x-wav'})
+    r = requests.post(URL, data=data, headers={'Content-Type': 'audio/ogg;codecs=opus'})
     if not r.status_code == 200:
         raise requests.exceptions.HTTPError(r.text)
     root = ET.fromstring(r.text)
-    assert(int(root.attrib['success']) == 1)
+    if not int(root.attrib['success']) == 1:
+        raise requests.exceptions.HTTPError(r.text)
     return list(root)[0].text
 
 
@@ -52,13 +53,15 @@ def find_rword_t(words, rword_t):
                 return True
     return False
 
+
 def make_doublewords(words):
     doublewords = []
     for i in range(len(words) - 1):
         doublewords.append("{} {}".format(words[i], words[i + 1]))
     return doublewords
 
-r = stt("voice/20181027 144250.wav")
+
+r = stt("voice3/audio_2018-10-27_19-06-17.ogg")
 print(is_scripted(r, [("наличные"), ("картой", "по карте")]))
 print(r)
 
