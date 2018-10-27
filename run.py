@@ -49,7 +49,7 @@ def is_scripted(text, rootwords_t):
 def find_rword_t(words, rword_t):
     for rword in rword_t:
         for word in words:
-            if distance(word, rword) < len(rword) // 2:
+            if distance(word, rword) <= max(2, len(rword) // 3):
                 return True
     return False
 
