@@ -1,5 +1,6 @@
 import requests
 import xml.etree.ElementTree as ET
+from http.server import HTTPServer, CGIHTTPRequestHandler
 URL = "https://asr.yandex.net/asr_xml?uuid=2ebb3f90fc3b454cbbcaa407f7b2b402&key=3427dc30-5eb2-4790-8065-d7ef6f4de74e&topic=queries&lang=ru-RU"
 
 
@@ -61,7 +62,7 @@ def make_doublewords(words):
     return doublewords
 
 
-r = stt("voice3/1.mp3")
-print(is_scripted(r, [("наличные"), ("картой", "по карте")]))
-print(r)
-
+if __name__ == '__main__':
+    r = stt("voice3/1.mp3")
+    print(is_scripted(r, [("наличные"), ("картой", "по карте")]))
+    print(r)
