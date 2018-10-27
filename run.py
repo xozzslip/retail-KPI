@@ -6,7 +6,7 @@ URL = "https://asr.yandex.net/asr_xml?uuid=2ebb3f90fc3b454cbbcaa407f7b2b402&key=
 def stt(fname):
     with open(fname, 'rb') as f:
         data = f.read()
-    r = requests.post(URL, data=data, headers={'Content-Type': 'audio/ogg;codecs=opus'})
+    r = requests.post(URL, data=data, headers={'Content-Type': 'audio/x-mpeg-3'})
     if not r.status_code == 200:
         raise requests.exceptions.HTTPError(r.text)
     root = ET.fromstring(r.text)
@@ -61,7 +61,7 @@ def make_doublewords(words):
     return doublewords
 
 
-r = stt("voice3/audio_2018-10-27_19-06-17.ogg")
+r = stt("voice3/1.mp3")
 print(is_scripted(r, [("наличные"), ("картой", "по карте")]))
 print(r)
 
