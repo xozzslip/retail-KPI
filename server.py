@@ -1,9 +1,10 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 import base64
 import json
 import uuid
 import subprocess
 from script import is_scripted, stt
+from flask import jsonify
 app = Flask(__name__)
 
 
@@ -26,8 +27,15 @@ def hello():
         for i in range(len(words)):
             words[i] = tuple(words[i])
         text = stt(voice_fname)
-        result = is_scripted(text, words)
-        return str(result)
+        if not text:
+            data = {'text': "<NO TEXT>", 'quality': 0, 'not_found': []}
+        elif not words:
+            data = {'text': text, 'quality': 1, 'not_found': []}
+        else:
+            not_found = is_scripted(text, words)
+            data = {'text': text, 'quality': 1 - len(not_found) / len(words), 
+                    'not_found': [nf_t[0] for nf_t in not_found]}
+        return Response(json.dumps(data), mimetype='application/json; charset=utf-8')
     
 
 def convert(binary_voice):

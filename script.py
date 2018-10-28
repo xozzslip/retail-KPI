@@ -12,7 +12,7 @@ def stt(fname):
         raise requests.exceptions.HTTPError(r.text)
     root = ET.fromstring(r.text)
     if not int(root.attrib['success']) == 1:
-        raise requests.exceptions.HTTPError(r.text)
+        return ''
     return list(root)[0].text
 
 
@@ -44,7 +44,7 @@ def is_scripted(text, rootwords_t):
     for rword_t in (rootwords_t - found):
         if find_rword_t(double_words, rword_t):
             found.add(rword_t)
-    return len(found) / len(rootwords_t)
+    return rootwords_t - found
 
 
 def find_rword_t(words, rword_t):
@@ -63,6 +63,6 @@ def make_doublewords(words):
 
 
 if __name__ == '__main__':
-    r = stt("voice3/1.mp3")
-    print(is_scripted(r, [("наличные"), ("картой", "по карте")]))
+    r = stt("voice3/audio_2018-10-27_19-06-17.mp3")
+    print(is_scripted(r, [("шоколад",), ("акция",), ("чай",)]))
     print(r)
